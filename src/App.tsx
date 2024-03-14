@@ -1,9 +1,11 @@
 import { useState } from "react";
 import { Grammatik } from "./Grammatik.ts";
+import { Syntaxbaum } from "./Syntaxbaum.tsx";
 
 function App() {
-  const [rules, setRules] = useState("");
-  const [word, setWord] = useState("");
+  const [rules, setRules] = useState("S->AB|BC\nA->BA|a\nB->CC|b\nC->AB|a");
+  const [word, setWord] = useState("baaba");
+  const [baum, setBaum] = useState<Set<string>[][]>([]);
 
   return (
     <>
@@ -42,14 +44,17 @@ function App() {
           <button
             className="bg-neutral-200 hover:bg-neutral-300 dark:bg-neutral-700 dark:hover:bg-neutral-600 transition-colors px-4 py-2 rounded-lg"
             onClick={(_) =>
-              console.log(Grammatik.fromChomskyNormalform(rules))
+              setBaum(Grammatik.fromChomskyNormalform(rules).suchen(word))
             }
           >
             Rechnen
           </button>
         </div>
-        <div>
-          Syntaxbaum für {word} mit Regeln {rules}
+        <div className="flex-1 flex flex-col items-center">
+          <span className="mb-2">Suchergebnis</span>
+          <div>
+            <Syntaxbaum suchErgebnis={baum} wort={word}></Syntaxbaum>
+          </div>
         </div>
       </div>
     </>

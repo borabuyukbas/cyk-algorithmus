@@ -72,6 +72,47 @@ export class Grammatik {
     return grammatik;
   }
 
+  public suchen(wort: string) {
+    const allKeys = Array.from(this.produktionRegeln.keys());
+    // Initialisierung neues zweidimensional-Arrays mit leeren Sets
+    const ableitungen: Set<string>[][] = Array.from(
+      { length: wort.length },
+      (_, i) =>
+        new Array(wort.length - i).fill(null).map(() => new Set<string>())
+    );
+
+    for (let len = 1; len <= wort.length; len++) {
+      // Alle Kombinationen von Wort mit gegebener Länge
+      const stringParts = groupString(wort, len);
+
+      for (const [col, part] of stringParts.entries()) {
+        if (len == 1) {
+          // Initialisierung von Terminal-Ableitungen in erster Zeile
+          ableitungen[len - 1][col] = new Set(
+            allKeys.filter((k) => this.produktionRegeln.get(k)!.has(part))
+          );
+        } else {
+          // Führe Suchen-Algorithm für Wörte mit der Länge > 2
+          for (let search_len = 1; search_len < len; search_len++) {
+            const completing_len = len - search_len;
+            const existingCombination = ableitungen[search_len - 1][col];
+            const completingCombination =
+              ableitungen[completing_len - 1][search_len + col];
+            const allCombinations = Array.from(existingCombination, (str1) =>
+              Array.from(completingCombination, (str2) => str1 + str2)
+            ).flat();
+            allCombinations.forEach((c) =>
+              allKeys
+                .filter((k) => this.produktionRegeln.get(k)!.has(c))
+                .forEach((k) => ableitungen[len - 1][col].add(k))
+            );
+          }
+        }
+      }
+    }
+    return ableitungen;
+  }
+
   private pruefenRegeln(variabel: string, produktion: string): boolean {
     if (!this.variablen.has(variabel)) return false;
     if (produktion.length > 2) return false;
@@ -88,4 +129,12 @@ export class Grammatik {
 
     return true;
   }
+}
+
+export function groupString(str: string, n: number) {
+  const result = [];
+  for (let i = 0; i <= str.length - n; i++) {
+    result.push(str.slice(i, i + n));
+  }
+  return result;
 }

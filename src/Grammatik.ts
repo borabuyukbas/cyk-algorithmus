@@ -37,16 +37,16 @@ export class Grammatik {
 
   public static fromChomskyNormalform(text: string): Grammatik {
     // _ als Platzholder für neue Grammatik
-    let grammatik = new Grammatik(new Set(["_"]), new Set(), "_");
+    const grammatik = new Grammatik(new Set(["_"]), new Set(), "_");
 
-    let tempRegeln = new Map<string, Set<string>>();
+    const tempRegeln = new Map<string, Set<string>>();
 
     for (const [index, zeile] of text.split("\n").entries()) {
-      let gefilterteZeile = zeile.replace(/\s/g, "");
-      let zeileParts = gefilterteZeile.split("->");
+      const gefilterteZeile = zeile.replace(/\s/g, "");
+      const zeileParts = gefilterteZeile.split("->");
       if (zeileParts.length == 2) {
-        let [variabel, regelnText] = gefilterteZeile.split("->");
-        let regeln = regelnText.split("|");
+        const [variabel, regelnText] = gefilterteZeile.split("->");
+        const regeln = regelnText.split("|");
 
         grammatik.variablen.add(variabel);
         if (index == 0) grammatik.startsymbol = variabel;

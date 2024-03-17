@@ -11,15 +11,23 @@ export function Syntaxbaum(props: {
   return (
     <table>
       {props.suchErgebnis.map((b, l) => (
-        <tr>
+        <tr key={`zeile${l}`}>
           <span className="font-bold mr-2">Länge {l + 1}</span>
           {b.map((s, i) => (
-            <td className="border border-neutral-800 dark:border-neutral-200">
+            <td
+              key={`zeile${l}_spalte${i}`}
+              className="border border-neutral-800 dark:border-neutral-200"
+            >
               <span className="bg-neutral-200 dark:bg-neutral-700 px-1 rounded-md">
                 {groupedStrings[l][i]}
               </span>
-              {[...s].map((v) => (
-                <span className="italic mx-0.5">{v}</span>
+              {[...s].map((v, ri) => (
+                <span
+                  key={`zeile${l}_spalte${i}_regel${ri}`}
+                  className="italic mx-0.5"
+                >
+                  {v}
+                </span>
               ))}
             </td>
           ))}

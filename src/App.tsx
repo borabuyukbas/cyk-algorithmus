@@ -30,6 +30,13 @@ function App() {
               onChange={(e) => setRules(e.target.value)}
               value={rules}
             />
+            <div className="mt-2 p-2 border rounded-xl">
+              Hinweis: Produktion mit leerem Wort kann mit Zeichnen
+              <span className="mx-1 px-1 bg-neutral-200 dark:bg-neutral-700 rounded-xl">
+                ϵ
+              </span>
+              definiert werden.
+            </div>
           </div>
           <div className="flex flex-col">
             <label htmlFor="wort">Wort</label>
